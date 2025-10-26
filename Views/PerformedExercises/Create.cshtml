@@ -1,0 +1,57 @@
+@model BeFitUniMvc.Features.Exercises.PerformedExercise
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>PerformedExercise</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="TrainingSessionId" class="form-label">Sesja treningowa</label>
+                <select asp-for="TrainingSessionId" class="form-select"
+                        asp-items="ViewBag.TrainingSessionId"></select>
+                <span asp-validation-for="TrainingSessionId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ExerciseTypeId" class="form-label">Rodzaj ćwiczenia</label>
+                <select asp-for="ExerciseTypeId" class="form-select"
+                        asp-items="ViewBag.ExerciseTypeId"></select>
+                <span asp-validation-for="ExerciseTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Sets" class="form-label">Serie</label>
+                <input asp-for="Sets" class="form-control" />
+                <span asp-validation-for="Sets" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Reps" class="form-label">Powtórzenia</label>
+                <input asp-for="Reps" class="form-control" />
+                <span asp-validation-for="Reps" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Weight" class="form-label">Ciężar (kg)</label>
+                <input asp-for="Weight" class="form-control" />
+                <span asp-validation-for="Weight" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label">Notatki</label>
+                <input asp-for="Notes" class="form-control" />
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts { @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} }

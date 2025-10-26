@@ -1,0 +1,53 @@
+@model StatsVm
+@{
+    ViewData["Title"] = "Statystyki";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-auto">
+        <label for="from" class="form-label">Od</label>
+        <input type="date" id="from" name="from" class="form-control" value="@(Model.From?.ToString("yyyy-MM-dd"))" />
+    </div>
+    <div class="col-auto">
+        <label for="to" class="form-label">Do</label>
+        <input type="date" id="to" name="to" class="form-control" value="@(Model.To?.ToString("yyyy-MM-dd"))" />
+    </div>
+    <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-primary">Filtruj</button>
+        <a asp-action="Index" class="btn btn-secondary">Wyczyść</a>
+    </div>
+</form>
+
+<div class="row mb-4">
+    <div class="col"><div class="card p-3"><b>Wpisy</b><div>@Model.TotalExercises</div></div></div>
+    <div class="col"><div class="card p-3"><b>Serie</b><div>@Model.TotalSets</div></div></div>
+    <div class="col"><div class="card p-3"><b>Powtórzenia</b><div>@Model.TotalReps</div></div></div>
+    <div class="col"><div class="card p-3"><b>Objętość (kg·powt.)</b><div>@Model.TotalVolume.ToString("0.##")</div></div></div>
+</div>
+
+<h3>TOP 5 ćwiczeń (wg objętości)</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ćwiczenie</th>
+            <th>Sesje</th>
+            <th>Serie</th>
+            <th>Powtórzenia</th>
+            <th>Objętość</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var t in Model.TopExercises)
+    {
+        <tr>
+            <td>@t.Exercise</td>
+            <td>@t.Sessions</td>
+            <td>@t.Sets</td>
+            <td>@t.Reps</td>
+            <td>@t.Volume.ToString("0.##")</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,48 @@
+@model IEnumerable<BeFitUniMvc.Features.Exercises.PerformedExercise>
+
+@{
+    ViewData["Title"] = "Wykonane ćwiczenia";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Dodaj</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Sesja</th>
+            <th>Ćwiczenie</th>
+            <th>Serie</th>
+            <th>Powt.</th>
+            <th>Ciężar (kg)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.TrainingSession?.Date.ToString("yyyy-MM-dd")</td>
+            <td>@item.TrainingSession?.Title</td>
+            <td>@item.ExerciseType?.Name</td>
+            <td>@item.Sets</td>
+            <td>@item.Reps</td>
+            <td>@(item.Weight.HasValue ? item.Weight.Value.ToString("0.##") : "-")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@if (!(Model?.Any() ?? false))
+{
+    <div class="alert alert-info">Brak pozycji — dodaj pierwsze ćwiczenie.</div>
+}

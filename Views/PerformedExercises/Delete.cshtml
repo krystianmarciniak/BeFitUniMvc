@@ -1,0 +1,41 @@
+@model BeFitUniMvc.Features.Exercises.PerformedExercise
+@{
+    ViewData["Title"] = "Usuń ćwiczenie";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Czy na pewno chcesz usunąć ten rekord?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Data</dt>
+        <dd class="col-sm-10">@Model?.TrainingSession?.Date.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-2">Sesja</dt>
+        <dd class="col-sm-10">@Model?.TrainingSession?.Title ?? "(brak)"</dd>
+
+        <dt class="col-sm-2">Ćwiczenie</dt>
+        <dd class="col-sm-10">@Model?.ExerciseType?.Name ?? "(brak)"</dd>
+
+        <dt class="col-sm-2">Serie</dt>
+        <dd class="col-sm-10">@Model?.Sets</dd>
+
+        <dt class="col-sm-2">Powtórzenia</dt>
+        <dd class="col-sm-10">@Model?.Reps</dd>
+
+        <dt class="col-sm-2">Ciężar (kg)</dt>
+        <dd class="col-sm-10">
+            @(Model?.Weight.HasValue == true ? Model.Weight.Value.ToString("0.##") : "-")
+        </dd>
+
+        <dt class="col-sm-2">Notatki</dt>
+        <dd class="col-sm-10">@Model?.Notes ?? "(brak)"</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Usuń</button>
+        <a asp-action="Index" class="btn btn-secondary">Wróć</a>
+    </form>
+</div>
