@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using BeFitUniMvc.Features.Exercises;
 
-namespace BeFitUniMvc.Features.Sessions;
+namespace BeFitUniMvc.Models;
 
 public class TrainingSession
 {
@@ -11,13 +11,17 @@ public class TrainingSession
     [Display(Name = "Tytuł sesji treningowej")]
     public string Title { get; set; } = string.Empty;
 
-    [DataType(DataType.Date)]
-    [Display(Name = "Data")]
-    public DateTime Date { get; set; } = DateTime.Today;
+    [Required, DataType(DataType.DateTime)]
+    [Display(Name = "Początek")]
+    public DateTime StartTime { get; set; } = DateTime.Now;
 
-    // właściciel rekordu
+    [Required, DataType(DataType.DateTime)]
+    [Display(Name = "Koniec")]
+    public DateTime EndTime { get; set; } = DateTime.Now.AddHours(1);
+
+    // przypisywane automatycznie w kontrolerze; nie pokazujemy w formularzach
     [Display(Name = "Użytkownik")]
-    public string UserId { get; set; } = string.Empty;
+    public string? UserId { get; set; }
 
-    public ICollection<PerformedExercise> PerformedExercises { get; set; } = new List<PerformedExercise>();
+    public ICollection<PerformedExercise>? PerformedExercises { get; set; }
 }

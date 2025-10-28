@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using BeFitUniMvc.Features.Sessions;
-
+using BeFitUniMvc.Models;
 namespace BeFitUniMvc.Features.Exercises
 {
     public class PerformedExercise
@@ -8,9 +7,11 @@ namespace BeFitUniMvc.Features.Exercises
         public int Id { get; set; }
 
         [Display(Name = "Sesja treningowa")]
+        [Required]
         public int TrainingSessionId { get; set; }
 
         [Display(Name = "Rodzaj ćwiczenia")]
+        [Required]
         public int ExerciseTypeId { get; set; }
 
         [Display(Name = "Serie"), Range(1, 50)]
@@ -24,6 +25,10 @@ namespace BeFitUniMvc.Features.Exercises
 
         [Display(Name = "Notatki")]
         public string? Notes { get; set; }
+
+        // automatycznie przypisywane; brak w formularzach
+        [Display(Name = "Użytkownik")]
+        public string? UserId { get; set; }
 
         [Display(Name = "Sesja")]
         public TrainingSession? TrainingSession { get; set; }

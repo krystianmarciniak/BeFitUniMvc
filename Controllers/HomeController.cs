@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BeFitUniMvc.Models;
+using BeFitUniMvc.Data;
 
 namespace BeFitUniMvc.Controllers;
 

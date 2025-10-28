@@ -1,52 +1,62 @@
-@model StatsVm
+@model BeFitUniMvc.Models.StatsVm
+
 @{
     ViewData["Title"] = "Statystyki";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h2>Statystyki</h2>
 
-<form method="get" class="row g-3 mb-3">
+<form method="get" class="row g-2 mb-3">
     <div class="col-auto">
-        <label for="from" class="form-label">Od</label>
-        <input type="date" id="from" name="from" class="form-control" value="@(Model.From?.ToString("yyyy-MM-dd"))" />
+        <label class="form-label">Od</label>
+        <input type="date" name="from" class="form-control"
+               value="@(Model.From?.ToString("yyyy-MM-dd"))" />
     </div>
     <div class="col-auto">
-        <label for="to" class="form-label">Do</label>
-        <input type="date" id="to" name="to" class="form-control" value="@(Model.To?.ToString("yyyy-MM-dd"))" />
+        <label class="form-label">Do</label>
+        <input type="date" name="to" class="form-control"
+               value="@(Model.To?.ToString("yyyy-MM-dd"))" />
     </div>
     <div class="col-auto align-self-end">
-        <button type="submit" class="btn btn-primary">Filtruj</button>
-        <a asp-action="Index" class="btn btn-secondary">Wyczyść</a>
+        <button class="btn btn-primary" type="submit">Filtruj</button>
     </div>
 </form>
 
-<div class="row mb-4">
-    <div class="col"><div class="card p-3"><b>Wpisy</b><div>@Model.TotalExercises</div></div></div>
-    <div class="col"><div class="card p-3"><b>Serie</b><div>@Model.TotalSets</div></div></div>
-    <div class="col"><div class="card p-3"><b>Powtórzenia</b><div>@Model.TotalReps</div></div></div>
-    <div class="col"><div class="card p-3"><b>Objętość (kg·powt.)</b><div>@Model.TotalVolume.ToString("0.##")</div></div></div>
+<div class="row mb-3">
+    <div class="col-md-3">
+        <div class="card p-3">
+            <div class="small text-muted">Łącznie ćwiczeń</div>
+            <div class="h4">@Model.TotalExercises</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <div class="small text-muted">Łączny wolumen</div>
+            <div class="h4">@Model.TotalVolume</div>
+        </div>
+    </div>
 </div>
 
-<h3>TOP 5 ćwiczeń (wg objętości)</h3>
+<h4>Top ćwiczenia</h4>
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Ćwiczenie</th>
             <th>Sesje</th>
-            <th>Serie</th>
+            <th>Zestawy</th>
             <th>Powtórzenia</th>
-            <th>Objętość</th>
+            <th>Wolumen</th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var t in Model.TopExercises)
+    @foreach (var e in Model.TopExercises)
     {
         <tr>
-            <td>@t.Exercise</td>
-            <td>@t.Sessions</td>
-            <td>@t.Sets</td>
-            <td>@t.Reps</td>
-            <td>@t.Volume.ToString("0.##")</td>
+            <td>@e.Exercise</td>
+            <td>@e.Sessions</td>
+            <td>@e.Sets</td>
+            <td>@e.Reps</td>
+            <td>@e.Volume</td>
         </tr>
     }
     </tbody>

@@ -266,6 +266,7 @@ C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitU
 C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitUniMvc\obj\Debug\net8.0\BeFitUniMvc.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitUniMvc\obj\Debug\net8.0\BeFitUniMvc.RazorAssemblyInfo.cache
 C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitUniMvc\obj\Debug\net8.0\BeFitUniMvc.RazorAssemblyInfo.cs
+C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitUniMvc\obj\Debug\net8.0\BeFitUniMvc.sourcelink.json
 C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitUniMvc\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitUniMvc\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\kryst\Documents\53 Programowanie zaawansowane\21 Aplikacja BeFit\BeFitUniMvc\obj\Debug\net8.0\staticwebassets\msbuild.BeFitUniMvc.Microsoft.AspNetCore.StaticWebAssets.props

@@ -1,153 +1,151 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BeFitUniMvc.Data;
 using BeFitUniMvc.Features.Exercises;
 
-[Authorize]
+[Authorize] // tylko zalogowani
 public class PerformedExercisesController : Controller
 {
     private readonly ApplicationDbContext _context;
-    public PerformedExercisesController(ApplicationDbContext context) => _context = context;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-
-    // jeden, spójny helper do SelectList
-    private void PopulateSelectLists(int? trainingSessionId = null, int? exerciseTypeId = null)
+    public PerformedExercisesController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
-        var uid = GetUserId();
-
-        var sessions = _context.TrainingSessions
-            .Where(t => t.UserId == uid)
-            .OrderByDescending(t => t.Date)
-            .Select(t => new { t.Id, Text = t.Date.ToString("yyyy-MM-dd") + " • " + t.Title })
-            .ToList();
-
-        ViewData["TrainingSessionId"] = new SelectList(sessions, "Id", "Text", trainingSessionId);
-
-        var types = _context.ExerciseTypes
-            .OrderBy(x => x.Name)
-            .Select(x => new { x.Id, x.Name })
-            .ToList();
-
-        ViewData["ExerciseTypeId"] = new SelectList(types, "Id", "Name", exerciseTypeId);
+        _context = context;
+        _userManager = userManager;
     }
 
-    // INDEX
     public async Task<IActionResult> Index()
     {
-        var uid = GetUserId();
-        var list = await _context.PerformedExercises
+        var uid = _userManager.GetUserId(User);
+        var items = await _context.PerformedExercises
             .Include(p => p.TrainingSession)
             .Include(p => p.ExerciseType)
-            .Where(p => p.TrainingSession.UserId == uid)
-            .OrderByDescending(p => p.TrainingSession.Date)
+            .Where(p => p.UserId == uid) // własne wpisy
             .AsNoTracking()
             .ToListAsync();
-
-        return View(list);
+        return View(items);
     }
 
-    // DETAILS
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();
+        var uid = _userManager.GetUserId(User);
 
-        var uid = GetUserId();
         var item = await _context.PerformedExercises
             .Include(p => p.TrainingSession)
             .Include(p => p.ExerciseType)
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == id && p.TrainingSession.UserId == uid);
+            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == uid);
 
-        if (item == null) return NotFound();
-        return View(item);
+        return item == null ? Forbid() : View(item);
     }
 
-    // CREATE GET
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        PopulateSelectLists();
+        var uid = _userManager.GetUserId(User);
+        ViewData["TrainingSessionId"] = new SelectList(
+            await _context.TrainingSessions.Where(ts => ts.UserId == uid).ToListAsync(),
+            "Id", "Title"
+        );
+        ViewData["ExerciseTypeId"] = new SelectList(await _context.ExerciseTypes.ToListAsync(), "Id", "Name");
         return View();
     }
 
-    // CREATE POST
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("TrainingSessionId,ExerciseTypeId,Sets,Reps,Weight,Notes")] PerformedExercise pe)
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("TrainingSessionId,ExerciseTypeId,Sets,Reps,Weight,Notes")] PerformedExercise model)
     {
-        if (ModelState.IsValid)
+        var uid = _userManager.GetUserId(User);
+
+        // bezpieczeństwo: sesja musi być własnością użytkownika
+        var ownsSession = await _context.TrainingSessions.AnyAsync(ts => ts.Id == model.TrainingSessionId && ts.UserId == uid);
+        if (!ownsSession)
         {
-            _context.Add(pe);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ModelState.AddModelError(nameof(model.TrainingSessionId), "Nieprawidłowa sesja.");
         }
-        PopulateSelectLists(pe.TrainingSessionId, pe.ExerciseTypeId);
-        return View(pe);
+
+        if (!ModelState.IsValid)
+        {
+            ViewData["TrainingSessionId"] = new SelectList(_context.TrainingSessions.Where(ts => ts.UserId == uid), "Id", "Title", model.TrainingSessionId);
+            ViewData["ExerciseTypeId"] = new SelectList(_context.ExerciseTypes, "Id", "Name", model.ExerciseTypeId);
+            return View(model);
+        }
+
+        model.UserId = uid;
+        _context.Add(model);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
     }
 
-    // EDIT GET
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return NotFound();
+        var uid = _userManager.GetUserId(User);
 
         var item = await _context.PerformedExercises.FindAsync(id);
         if (item == null) return NotFound();
+        if (item.UserId != uid) return Forbid();
 
-        PopulateSelectLists(item.TrainingSessionId, item.ExerciseTypeId);
+        ViewData["TrainingSessionId"] = new SelectList(_context.TrainingSessions.Where(ts => ts.UserId == uid), "Id", "Title", item.TrainingSessionId);
+        ViewData["ExerciseTypeId"] = new SelectList(_context.ExerciseTypes, "Id", "Name", item.ExerciseTypeId);
         return View(item);
     }
 
-    // EDIT POST
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,TrainingSessionId,ExerciseTypeId,Sets,Reps,Weight,Notes")] PerformedExercise pe)
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id,TrainingSessionId,ExerciseTypeId,Sets,Reps,Weight,Notes")] PerformedExercise model)
     {
-        if (id != pe.Id) return NotFound();
+        if (id != model.Id) return NotFound();
+        var uid = _userManager.GetUserId(User);
 
-        if (ModelState.IsValid)
+        var original = await _context.PerformedExercises.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        if (original == null) return NotFound();
+        if (original.UserId != uid) return Forbid();
+
+        // sesja nadal musi należeć do użytkownika
+        var ownsSession = await _context.TrainingSessions.AnyAsync(ts => ts.Id == model.TrainingSessionId && ts.UserId == uid);
+        if (!ownsSession)
+            ModelState.AddModelError(nameof(model.TrainingSessionId), "Nieprawidłowa sesja.");
+
+        if (!ModelState.IsValid)
         {
-            _context.Update(pe);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewData["TrainingSessionId"] = new SelectList(_context.TrainingSessions.Where(ts => ts.UserId == uid), "Id", "Title", model.TrainingSessionId);
+            ViewData["ExerciseTypeId"] = new SelectList(_context.ExerciseTypes, "Id", "Name", model.ExerciseTypeId);
+            return View(model);
         }
-        PopulateSelectLists(pe.TrainingSessionId, pe.ExerciseTypeId);
-        return View(pe);
+
+        model.UserId = uid; // utrzymujemy właściciela
+        _context.Update(model);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
     }
 
-    // DELETE GET
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null) return NotFound();
+        var uid = _userManager.GetUserId(User);
 
-        var uid = GetUserId();
         var item = await _context.PerformedExercises
             .Include(p => p.TrainingSession)
             .Include(p => p.ExerciseType)
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == id && p.TrainingSession.UserId == uid);
+            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == uid);
 
-        if (item == null) return NotFound();
-        return View(item);
+        return item == null ? Forbid() : View(item);
     }
 
-    // DELETE POST
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
+    [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var uid = GetUserId();
-        var item = await _context.PerformedExercises
-            .Include(p => p.TrainingSession)
-            .FirstOrDefaultAsync(p => p.Id == id && p.TrainingSession.UserId == uid);
+        var uid = _userManager.GetUserId(User);
+        var item = await _context.PerformedExercises.FindAsync(id);
+        if (item == null) return NotFound();
+        if (item.UserId != uid) return Forbid();
 
-        if (item != null)
-        {
-            _context.PerformedExercises.Remove(item);
-            await _context.SaveChangesAsync();
-        }
+        _context.PerformedExercises.Remove(item);
+        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 }

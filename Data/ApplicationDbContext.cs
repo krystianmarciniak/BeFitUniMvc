@@ -1,32 +1,36 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using BeFitUniMvc.Features.Exercises;
-using BeFitUniMvc.Features.Sessions;
+using BeFitUniMvc.Models;
+
+//using BeFitUniMvc.Features.Sessions;
 
 namespace BeFitUniMvc.Data;
 
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+           : base(options){}
 
-    public DbSet<ExerciseType> ExerciseTypes { get; set; }
-    public DbSet<TrainingSession> TrainingSessions { get; set; }
-    public DbSet<PerformedExercise> PerformedExercises { get; set; }
+    public DbSet<ExerciseType> ExerciseTypes { get; set; } = default!;
+    public DbSet<TrainingSession> TrainingSessions { get; set; } = default!;
+    public DbSet<PerformedExercise> PerformedExercises { get; set; } = default!;
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
 
-        builder.Entity<PerformedExercise>()
-            .HasOne(p => p.TrainingSession)
-            .WithMany(s => s.PerformedExercises)
-            .HasForeignKey(p => p.TrainingSessionId)
+        modelBuilder.Entity<PerformedExercise>()
+            .HasOne(pe => pe.TrainingSession)
+            .WithMany(ts => ts.PerformedExercises)
+            .HasForeignKey(pe => pe.TrainingSessionId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<PerformedExercise>()
-            .HasOne(p => p.ExerciseType)
-            .WithMany(t => t.PerformedExercises)
-            .HasForeignKey(p => p.ExerciseTypeId)
+        modelBuilder.Entity<PerformedExercise>()
+            .HasOne(pe => pe.ExerciseType)
+            .WithMany(et => et.PerformedExercises)
+            .HasForeignKey(pe => pe.ExerciseTypeId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

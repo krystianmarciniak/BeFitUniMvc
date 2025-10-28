@@ -6,9 +6,7 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Dodaj</a>
-</p>
+<p><a asp-action="Create" class="btn btn-primary">Dodaj</a></p>
 
 <table class="table table-striped">
     <thead>
@@ -26,9 +24,9 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td>@item.TrainingSession?.Date.ToString("yyyy-MM-dd")</td>
-            <td>@item.TrainingSession?.Title</td>
-            <td>@item.ExerciseType?.Name</td>
+            <td>@Html.DisplayFor(modelItem => item.TrainingSession.StartTime)</td>
+            <td>@item.TrainingSession?.Title ?? "(brak)"</td>
+            <td>@item.ExerciseType?.Name ?? "(brak)"</td>
             <td>@item.Sets</td>
             <td>@item.Reps</td>
             <td>@(item.Weight.HasValue ? item.Weight.Value.ToString("0.##") : "-")</td>
