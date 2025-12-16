@@ -42,7 +42,7 @@ public class TrainingSessionsController : Controller
 
     public IActionResult Create() => View();
 
-    [HttpPost]
+[HttpPost]
 [ValidateAntiForgeryToken]
 public async Task<IActionResult> Create([Bind("Title,StartTime,EndTime")] TrainingSession session)
 {
@@ -63,38 +63,52 @@ public async Task<IActionResult> Create([Bind("Title,StartTime,EndTime")] Traini
     return RedirectToAction(nameof(Index));
 }
 
+  [HttpGet]
+public async Task<IActionResult> Edit(int? id)
+{
+    if (id is null) return NotFound();
+    var uid = _userManager.GetUserId(User);
 
-    public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null) return NotFound();
-        var uid = _userManager.GetUserId(User);
+    var entity = await _context.TrainingSessions
+        .AsNoTracking()
+        .FirstOrDefaultAsync(x => x.Id == id && x.UserId == uid);
 
-        var item = await _context.TrainingSessions.FindAsync(id);
-        if (item == null) return NotFound();
-        if (item.UserId != uid) return Forbid();
+    if (entity == null) return NotFound();
+    return View(entity);
+}
 
-        return View(item);
-    }
 
-    [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, TrainingSession model)
-    {
-        if (id != model.Id) return NotFound();
+    [HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Edit(int id, TrainingSession input)
+{
+    if (id != input.Id) return NotFound();
 
-        if (model.EndTime < model.StartTime)
-            ModelState.AddModelError(nameof(model.EndTime), "Koniec nie może być wcześniejszy niż początek.");
-        if (!ModelState.IsValid) return View(model);
+    // Walidacja domenowa: koniec po początku
+    if (input.EndTime <= input.StartTime)
+        ModelState.AddModelError(nameof(input.EndTime), "Koniec musi być po początku.");
 
-        var uid = _userManager.GetUserId(User);
-        var original = await _context.TrainingSessions.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-        if (original == null) return NotFound();
-        if (original.UserId != uid) return Forbid();
+    if (!ModelState.IsValid)
+        return View(input);
 
-        model.UserId = uid; // utrzymujemy właściciela
-        _context.Update(model);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
+    var uid = _userManager.GetUserId(User);
+
+    // Pobierz encję zalogowanego użytkownika (bez AsNoTracking – chcemy śledzenia zmian)
+    var entity = await _context.TrainingSessions
+        .FirstOrDefaultAsync(x => x.Id == id && x.UserId == uid);
+
+    // Jeśli brak – nie istnieje lub nie należy do użytkownika
+    if (entity == null) return NotFound();
+
+    // Aktualizacja tylko dozwolonych pól
+    entity.Title = input.Title;
+    entity.StartTime = input.StartTime;
+    entity.EndTime = input.EndTime;
+
+    await _context.SaveChangesAsync();
+    return RedirectToAction(nameof(Index));
+}
+
 
     public async Task<IActionResult> Delete(int? id)
     {

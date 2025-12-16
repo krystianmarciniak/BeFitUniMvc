@@ -79,9 +79,21 @@ public class ExerciseTypesController : Controller
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var et = await _context.ExerciseTypes.FindAsync(id);
-        if (et != null) _context.ExerciseTypes.Remove(et);
+        var entity = await _context.ExerciseTypes.FindAsync(id);
+    if (entity == null) return NotFound();
+
+    try
+    {
+        _context.ExerciseTypes.Remove(entity);
         await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
+        TempData["Msg"] = "Usunięto rodzaj ćwiczenia.";
+    }
+    catch (DbUpdateException)
+    {
+        // naruszenie FK – typ użyty w PerformedExercises
+        TempData["Error"] = "Nie można usunąć: ten rodzaj ćwiczenia jest użyty w wykonanych ćwiczeniach.";
+    }
+
+    return RedirectToAction(nameof(Index)); 
     }
 }

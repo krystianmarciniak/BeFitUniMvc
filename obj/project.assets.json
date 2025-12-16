@@ -8135,11 +8135,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kryst\\Documents\\53 Programowanie zaawansowane\\21 Aplikacja BeFit\\BeFitUniMvc\\BeFitUniMvc.csproj",
+      "projectUniqueName": "C:\\Users\\kryst\\Documents\\53 Pr zaaw\\BeFitUniMvc\\BeFitUniMvc.csproj",
       "projectName": "BeFitUniMvc",
-      "projectPath": "C:\\Users\\kryst\\Documents\\53 Programowanie zaawansowane\\21 Aplikacja BeFit\\BeFitUniMvc\\BeFitUniMvc.csproj",
+      "projectPath": "C:\\Users\\kryst\\Documents\\53 Pr zaaw\\BeFitUniMvc\\BeFitUniMvc.csproj",
       "packagesPath": "C:\\Users\\kryst\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kryst\\Documents\\53 Programowanie zaawansowane\\21 Aplikacja BeFit\\BeFitUniMvc\\obj\\",
+      "outputPath": "C:\\Users\\kryst\\Documents\\53 Pr zaaw\\BeFitUniMvc\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kryst\\AppData\\Roaming\\NuGet\\NuGet.Config",

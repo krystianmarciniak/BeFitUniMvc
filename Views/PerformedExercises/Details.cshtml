@@ -14,10 +14,10 @@
     <dd class="col-sm-10">@Html.DisplayFor(model => model.TrainingSession.StartTime)</dd>
 
     <dt class="col-sm-2">Sesja</dt>
-    <dd class="col-sm-10">@Model?.TrainingSession?.Title ?? "(brak)"</dd>
+    <dd class="col-sm-10">@(Model?.TrainingSession?.Title ?? "(brak)")</dd>
 
     <dt class="col-sm-2">Ćwiczenie</dt>
-    <dd class="col-sm-10">@Model?.ExerciseType?.Name ?? "(brak)"</dd>
+    <dd class="col-sm-10">@(Model?.ExerciseType?.Name ?? "(brak)")</dd>
 
     <dt class="col-sm-2">Serie</dt>
     <dd class="col-sm-10">@Model?.Sets</dd>
@@ -31,7 +31,7 @@
     </dd>
 
     <dt class="col-sm-2">Notatki</dt>
-    <dd class="col-sm-10">@Model?.Notes ?? "(brak)"</dd>
+    <dd class="col-sm-10">@(Model?.Notes ?? "(brak)")</dd>
 </dl>
 
 </div>

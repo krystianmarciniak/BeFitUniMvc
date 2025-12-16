@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "J3lOcm/pUfQBUhVF6x9xGIYY7sjz13tftoF3GldbAO4jnFwe+yl/yaCP1xpOdUa7o2155YErseRerF/Jvv/VSQ==",
+  "dgSpecHash": "86Ik8+40mS+rnXS3V+e96pQBk1KZoDs7vlMqUHzx6kDGzYQgBXO7QxUIFEor2Pg0v5hxMPeI3QXyBPONaWGxXQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\kryst\\Documents\\53 Programowanie zaawansowane\\21 Aplikacja BeFit\\BeFitUniMvc\\BeFitUniMvc.csproj",
+  "projectFilePath": "C:\\Users\\kryst\\Documents\\53 Pr zaaw\\BeFitUniMvc\\BeFitUniMvc.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kryst\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\kryst\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
