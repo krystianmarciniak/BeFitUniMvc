@@ -1,3 +1,44 @@
+BeFitUniMvc to aplikacja ASP.NET Core MVC realizująca wymagania zadania projektowego, obejmująca system użytkowników, operacje CRUD oraz statystyki aktywności treningowej. Kod źródłowy został udostępniony w publicznym repozytorium GitHub.
+
+Opis projektu
+
+Projekt BeFitUniMvc jest aplikacją webową wykonaną w technologii ASP.NET Core MVC. Został przygotowany w ramach zaliczenia przedmiotu Programowanie zaawansowane – I.
+Aplikacja umożliwia użytkownikom prowadzenie ewidencji sesji treningowych, przypisywanie do nich wykonanych ćwiczeń oraz przeglądanie statystyk aktywności.
+
+Projekt wykorzystuje Entity Framework Core jako warstwę ORM oraz ASP.NET Core Identity do obsługi użytkowników i ról. Interfejs użytkownika oparty jest na klasycznych widokach Razor (.cshtml).
+Aplikacja nie wykorzystuje technologii Blazor.
+
+
+Zastosowane technologie
+
+- ASP.NET Core MVC (.NET 8)
+- Entity Framework Core
+- ASP.NET Core Identity
+- Razor Views
+- SQL Server (LocalDB)
+- Bootstrap
+
+
+Modele aplikacji
+W aplikacji zaimplementowano trzy główne modele:
+
+- ExerciseType – typ ćwiczenia (nazwa, opis, walidacja danych),
+- TrainingSession – sesja treningowa użytkownika (data oraz czas rozpoczęcia i zakończenia),
+- PerformedExercise – wykonane ćwiczenie w ramach sesji (serie, powtórzenia, obciążenie).
+
+Modele posiadają walidację pól wejściowych oraz relacje zgodne z założeniami zadania.
+
+Funkcjonalności
+
+- rejestracja i logowanie użytkowników,
+- role użytkowników (administrator, użytkownik),
+- zarządzanie sesjami treningowymi,
+- przypisywanie ćwiczeń do sesji,
+- pełne operacje CRUD,
+- dostęp do danych ograniczony wyłącznie do właściciela,
+- zarządzanie typami ćwiczeń dostępne tylko dla administratora.
+
+
 ## Widoki aplikacji
 
 ### Sesje treningowe
@@ -30,6 +71,12 @@ Widok statystyk użytkownika prezentujący zagregowane dane treningowe z wybrane
 
 ![Statystyki](./screenshots/4_Statystyki.png)
 
+
+Bezpieczeństwo
+dane są powiązane z kontem użytkownika,
+brak możliwości edycji lub usuwania cudzych danych,
+identyfikator użytkownika nie jest przekazywany w formularzach,
+operacje administracyjne dostępne wyłącznie dla użytkowników z odpowiednią rolą.
 
 
 Instrukcja uruchomienia projektu
@@ -70,69 +117,6 @@ W aplikacji skonfigurowane jest konto administratora, które umożliwia zarządz
 - Login: admin@befit.uni
 - Hasło: Admin123!
 
-BeFitUniMvc – aplikacja do zarządzania treningami
-Opis projektu
-
-Projekt BeFitUniMvc jest aplikacją webową wykonaną w technologii ASP.NET Core MVC. Został przygotowany w ramach zaliczenia przedmiotu Programowanie zaawansowane – I.
-Aplikacja umożliwia użytkownikom prowadzenie ewidencji sesji treningowych, przypisywanie do nich wykonanych ćwiczeń oraz przeglądanie statystyk aktywności.
-
-Projekt wykorzystuje Entity Framework Core jako warstwę ORM oraz ASP.NET Core Identity do obsługi użytkowników i ról. Interfejs użytkownika oparty jest na klasycznych widokach Razor (.cshtml).
-Aplikacja nie wykorzystuje technologii Blazor.
-
-
-Zastosowane technologie
-
-- ASP.NET Core MVC (.NET 8)
-- Entity Framework Core
-- ASP.NET Core Identity
-- Razor Views
-- SQL Server (LocalDB)
-- Bootstrap
-
-
-Modele aplikacji
-W aplikacji zaimplementowano trzy główne modele:
-
-- ExerciseType – typ ćwiczenia (nazwa, opis, walidacja danych),
-- TrainingSession – sesja treningowa użytkownika (data oraz czas rozpoczęcia i zakończenia),
-- PerformedExercise – wykonane ćwiczenie w ramach sesji (serie, powtórzenia, obciążenie).
-
-Modele posiadają walidację pól wejściowych oraz relacje zgodne z założeniami zadania.
-
-
-
-Funkcjonalności
-
-- rejestracja i logowanie użytkowników,
-- role użytkowników (administrator, użytkownik),
-- zarządzanie sesjami treningowymi,
-- przypisywanie ćwiczeń do sesji,
-- pełne operacje CRUD,
-- dostęp do danych ograniczony wyłącznie do właściciela,
-- zarządzanie typami ćwiczeń dostępne tylko dla administratora.
-
-Widoki aplikacji
-Sesje treningowe
-Widok prezentujący listę sesji treningowych zalogowanego użytkownika wraz z możliwością ich dodawania, edycji oraz usuwania.
-
-Wykonane ćwiczenia
-Widok zawierający listę wykonanych ćwiczeń przypisanych do sesji treningowych. Dane obejmują m.in. liczbę serii, powtórzeń oraz użyte obciążenie.
-Formularz dodawania nowego wykonanego ćwiczenia z automatycznym przypisaniem do sesji oraz użytkownika.
-
-Rodzaje ćwiczeń
-Widok administracyjny umożliwiający zarządzanie typami ćwiczeń dostępnymi w systemie.
-
-Statystyki użytkownika
-Widok statystyk prezentujący dane z wybranego zakresu czasu, obejmujące m.in. liczbę ćwiczeń, łączny wolumen oraz zestawienie najczęściej wykonywanych ćwiczeń.
-
-Statystyki
-Statystyki generowane są na podstawie danych użytkownika i obejmują wyłącznie jego aktywność. Aplikacja prezentuje zagregowane dane dotyczące liczby ćwiczeń, powtórzeń oraz obciążeń.
-
-Bezpieczeństwo
-dane są powiązane z kontem użytkownika,
-brak możliwości edycji lub usuwania cudzych danych,
-identyfikator użytkownika nie jest przekazywany w formularzach,
-operacje administracyjne dostępne wyłącznie dla użytkowników z odpowiednią rolą.
 
 Informacje końcowe
 Projekt spełnia wymagania zadania projektowego.
